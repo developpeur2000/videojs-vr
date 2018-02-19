@@ -218,6 +218,9 @@ class VR extends Plugin {
     if (!this.vrDisplay) {
       return;
     }
+    if (this.controls3dNotPresenting) {
+      this.controls3dNotPresenting.saveState();
+    }
     this.vrDisplay.requestPresent([{source: this.renderedCanvas}]);
   }
 
@@ -226,6 +229,9 @@ class VR extends Plugin {
       return;
     }
     this.vrDisplay.exitPresent();
+    if (this.controls3dNotPresenting) {
+      this.controls3dNotPresenting.reset();
+    }
   }
 
   requestAnimationFrame(fn) {
