@@ -270,7 +270,11 @@ class VR extends Plugin {
       this.videoImageContext_.drawImage(this.getVideoEl_(), 0, 0, this.videoImage_.width, this.videoImage_.height);
     }
 
-    this.controls3d.update();
+    if (this.controls3dNotPresenting && this.vrDisplay && !this.vrDisplay.isPresenting) {
+      this.controls3dNotPresenting.update();
+    } else {
+      this.controls3d.update();
+    }
     this.effect.render(this.scene, this.camera);
 
     if (window.navigator.getGamepads) {
@@ -479,6 +483,14 @@ class VR extends Plugin {
             this.addCardboardButton_();
           }
           this.controls3d = new VRControls(this.camera);
+          // Unless we're on mobile, we use the VR controls only if we're presenting
+          if (!videojs.browser.IS_IOS && !videojs.browser.IS_ANDROID) {
+            this.controls3dNotPresenting = new OrbitControls(this.camera, this.renderedCanvas);
+            this.controls3dNotPresenting.target.set(0, 0, -1);
+            this.controls3dNotPresenting.enableZoom = false;
+            this.controls3dNotPresenting.enablePan = false;
+            this.controls3dNotPresenting.rotateSpeed = -0.5;
+          }
         } else {
           this.log('no vr displays found going to use OrbitControls');
           this.controls3d = new OrbitControls(this.camera, this.renderedCanvas);
@@ -521,6 +533,9 @@ class VR extends Plugin {
 
     if (this.controls3d) {
       this.controls3d.dispose();
+    }
+    if (this.controls3dNotPresenting) {
+      this.controls3dNotPresenting.dispose();
     }
     if (this.effect) {
       this.effect.dispose();
