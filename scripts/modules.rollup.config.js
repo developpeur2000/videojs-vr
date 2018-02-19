@@ -10,6 +10,7 @@ import json from 'rollup-plugin-json';
 import replace from './rollup-replace';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
+import inject from 'rollup-plugin-inject';
 
 export default {
   name: 'videojsVr',
@@ -58,6 +59,10 @@ export default {
         'external-helpers',
         'transform-object-assign'
       ]
+    }),
+    inject({
+      include: ['node_modules/three/examples/js/**'],
+      THREE: ['three', '*']
     })
   ]
 };
