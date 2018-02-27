@@ -486,6 +486,7 @@ class VR extends Plugin {
           this.controls3d.rotateSpeed = -0.5;
         }
         this.animationFrameId_ = this.requestAnimationFrame(this.animate_);
+        this.trigger('vr-display-ready');
       });
     } else if (window.navigator.getVRDevices) {
       this.triggerError_({code: 'web-vr-out-of-date', dismiss: false});
@@ -500,6 +501,7 @@ class VR extends Plugin {
     window.addEventListener('vrdisplaydeactivate', this.handleVrDisplayDeactivate_, true);
 
     this.initialized_ = true;
+    this.trigger('vr-initialized');
   }
 
   addCardboardButton_() {
